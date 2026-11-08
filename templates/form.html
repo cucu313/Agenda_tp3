@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block titulo %}{{ 'Editar contacto' if contacto and contacto.id else 'Nuevo contacto' }}{% endblock %}
+
+{% block contenido %}
+  <a href="{{ url_for('index') }}" class="mb-4 inline-block text-sm text-tinta-suave no-underline hover:text-tinta">&larr; Volver a la agenda</a>
+
+  <h1 class="mb-4 font-titulo text-3xl font-semibold">{{ 'Editar contacto #' ~ contacto.id if contacto and contacto.id else 'Nuevo contacto' }}</h1>
+
+  <form method="post" action="{{ accion }}" enctype="multipart/form-data"
+        class="max-w-2xl border border-t-[3px] border-linea border-t-tinta bg-white p-7">
+
+    <div class="grid grid-cols-1 gap-4.5 sm:grid-cols-2">
+
+      <label class="grid gap-1.5 text-sm">
+        <span class="font-medium text-tinta-suave">Nombre *</span>
+        <input type="text" name="nombre" required value="{{ contacto.nombre if contacto else '' }}"
+               class="rounded-xs border-[1.5px] border-linea bg-papel px-3 py-2 text-base text-tinta focus:border-tinta focus:outline-none">
+      </label>
+
+      <label class="grid gap-1.5 text-sm">
+        <span class="font-medium text-tinta-suave">Apellido</span>
+        <input type="text" name="apellido" value="{{ contacto.apellido if contacto else '' }}"
+               class="rounded-xs border-[1.5px] border-linea bg-papel px-3 py-2 text-base text-tinta focus:border-tinta focus:outline-none">
+      </label>
+
+      <label class="grid gap-1.5 text-sm">
+        <span class="font-medium text-tinta-suave">Teléfono *</span>
+        <input type="text" name="telefono" required placeholder="+54 381 555-1234"
+               value="{{ contacto.telefono if contacto else '' }}"
+               class="rounded-xs border-[1.5px] border-linea bg-papel px-3 py-2 text-base text-tinta focus:border-tinta focus:outline-none">
+      </label>
+
+      <label class="grid gap-1.5 text-sm">
+        <span class="font-medium text-tinta-suave">Email *</span>
+        <input type="email" name="email" required placeholder="nombre@dominio.com"
+               value="{{ contacto.email if contacto else '' }}"
+               class="rounded-xs border-[1.5px] border-linea bg-papel px-3 py-2 text-base text-tinta focus:border-tinta focus:outline-none">
+      </label>
+
+      <label class="grid gap-1.5 text-sm">
+        <span class="font-medium text-tinta-suave">Categoría</span>
+        <input type="text" name="categoria" placeholder="familia, trabajo, amigos..."
+               value="{{ contacto.categoria if contacto else '' }}"
+               class="rounded-xs border-[1.5px] border-linea bg-papel px-3 py-2 text-base text-tinta focus:border-tinta focus:outline-none">
+      </label>
+
+      <label class="grid gap-1.5 text-sm sm:col-span-2">
+        <span class="font-medium text-tinta-suave">Foto del contacto</span>
+        <input type="file" name="imagen" accept="image/png, image/jpeg, image/gif, image/webp"
+               class="text-sm file:mr-3 file:cursor-pointer file:rounded-xs file:border-[1.5px] file:border-tinta file:bg-transparent file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tinta hover:file:bg-tinta hover:file:text-papel">
+        {% if contacto and contacto.imagen %}
+          <small class="text-xs text-tinta-suave">Ya tiene una foto cargada. Subí otra sólo si querés reemplazarla.</small>
+        {% else %}
+          <small class="text-xs text-tinta-suave">Formatos aceptados: PNG, JPG, GIF o WEBP (máx. 5&nbsp;MB).</small>
+        {% endif %}
+      </label>
+    </div>
+
+    <div class="mt-6 flex gap-3 border-t border-linea pt-5">
+      <button type="submit"
+              class="cursor-pointer rounded-xs border-[1.5px] border-tinta bg-tinta px-4 py-2.5 text-sm font-medium text-papel transition-colors hover:border-acento-oscuro hover:bg-acento-oscuro">
+        {{ 'Guardar cambios' if contacto and contacto.id else 'Registrar contacto' }}
+      </button>
+      <a href="{{ url_for('index') }}"
+         class="rounded-xs border-[1.5px] border-tinta px-4 py-2.5 text-sm font-medium text-tinta no-underline transition-colors hover:bg-tinta hover:text-papel">
+        Cancelar
+      </a>
+    </div>
+  </form>
+{% endblock %}

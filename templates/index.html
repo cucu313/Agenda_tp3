@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block titulo %}Agenda de contactos{% endblock %}
+
+{% block contenido %}
+  <div class="mb-7 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="font-titulo text-3xl font-semibold">Contactos registrados</h1>
+      <p class="text-tinta-suave">{{ contactos|length }} contacto{{ 's' if contactos|length != 1 else '' }} en el fichero.</p>
+    </div>
+    <a href="{{ url_for('nuevo_contacto') }}"
+       class="rounded-xs border-[1.5px] border-tinta bg-tinta px-4 py-2.5 text-sm font-medium text-papel no-underline transition-colors hover:border-acento-oscuro hover:bg-acento-oscuro focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acento">
+      + Nuevo contacto
+    </a>
+  </div>
+
+  {% if not contactos %}
+    <div class="grid justify-items-center gap-4 border-[1.5px] border-dashed border-linea px-6 py-12 text-center text-tinta-suave">
+      <p>Todavía no hay contactos cargados.</p>
+      <a href="{{ url_for('nuevo_contacto') }}"
+         class="rounded-xs border-[1.5px] border-tinta bg-tinta px-4 py-2.5 text-sm font-medium text-papel no-underline transition-colors hover:border-acento-oscuro hover:bg-acento-oscuro">
+        Registrar el primero
+      </a>
+    </div>
+  {% else %}
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {% for c in contactos %}
+        <article class="relative flex flex-col gap-4 border border-t-[3px] border-linea border-t-tinta bg-white px-4 pt-5 pb-4">
+
+          <!-- muesca recortada: detalle distintivo de la ficha -->
+          <div class="absolute -top-px right-4 h-2 w-6 bg-papel [clip-path:polygon(15%_100%,85%_100%,100%_0,0_0)]"></div>
+
+          <div class="flex items-start gap-3.5">
+            {% if c.imagen %}
+              <img class="size-16 shrink-0 border border-linea object-cover"
+                   src="{{ url_for('imagen_subida', nombre_archivo=c.imagen) }}"
+                   alt="Foto de {{ c.nombre_completo }}">
+            {% else %}
+              <div class="grid size-16 shrink-0 place-items-center border border-linea bg-papel font-titulo text-2xl text-tinta-suave" aria-hidden="true">{{ c.iniciales }}</div>
+            {% endif %}
+
+            <div class="min-w-0">
+              <h2 class="font-titulo text-xl font-semibold">{{ c.nombre_completo }}</h2>
+              <span class="mt-0.5 mb-2 inline-block border border-acento px-2 text-xs text-acento">{{ c.categoria }}</span>
+              <dl class="grid gap-0.5 text-sm">
+                <div class="flex gap-1.5"><dt class="min-w-14 text-tinta-suave">Teléfono</dt><dd class="break-all">{{ c.telefono }}</dd></div>
+                <div class="flex gap-1.5"><dt class="min-w-14 text-tinta-suave">Email</dt><dd class="break-all">{{ c.email }}</dd></div>
+                <div class="flex gap-1.5"><dt class="min-w-14 text-tinta-suave">ID</dt><dd>#{{ c.id }}</dd></div>
+              </dl>
+            </div>
+          </div>
+
+          <div class="flex gap-2.5 border-t border-linea pt-3.5">
+            <a href="{{ url_for('editar_contacto', contacto_id=c.id) }}"
+               class="rounded-xs border-[1.5px] border-tinta px-3.5 py-1.5 text-sm font-medium text-tinta no-underline transition-colors hover:bg-tinta hover:text-papel">
+              Editar
+            </a>
+            <form method="post" action="{{ url_for('eliminar_contacto', contacto_id=c.id) }}"
+                  onsubmit="return confirm('¿Eliminar a {{ c.nombre_completo }}? Esta acción no se puede deshacer.');">
+              <button type="submit"
+                      class="cursor-pointer rounded-xs border-[1.5px] border-acento bg-transparent px-3.5 py-1.5 text-sm font-medium text-acento transition-colors hover:bg-acento hover:text-white">
+                Eliminar
+              </button>
+            </form>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

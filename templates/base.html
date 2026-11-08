@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Agenda de contactos{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS v4: script de desarrollo (para producción se instala con npm) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Tema propio: define colores y fuentes como clases de Tailwind
+       (bg-papel, text-tinta, border-linea, font-titulo, etc.) -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-tinta: #2B2A28;
+      --color-tinta-suave: #5C5952;
+      --color-papel: #F2EEE3;
+      --color-linea: #D8D2C2;
+      --color-acento: #8C3B2E;
+      --color-acento-oscuro: #6E2E24;
+      --color-exito: #4F6F52;
+      --color-exito-fondo: #E9F0E7;
+      --color-error-fondo: #F6E7E2;
+      --font-titulo: "Source Serif 4", Georgia, serif;
+      --font-texto: "IBM Plex Sans", system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-papel text-tinta font-texto leading-normal">
+
+  <header class="border-b-2 border-tinta px-6 py-4">
+    <a href="{{ url_for('index') }}" class="mx-auto flex max-w-5xl items-center gap-3.5 no-underline">
+      <span class="grid size-10 place-items-center bg-tinta font-titulo text-lg font-bold text-papel">AG</span>
+      <span>
+        <strong class="block font-titulo text-lg">Agenda de contactos</strong>
+        <small class="text-sm text-tinta-suave">Fichero personal — TP‑3C</small>
+      </span>
+    </a>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-6 pt-8 pb-12">
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% if mensajes %}
+        <div class="mb-6 grid gap-2.5">
+          {% for categoria, mensaje in mensajes %}
+            {% if categoria == 'exito' %}
+              <div class="border-l-4 border-exito bg-exito-fondo px-4 py-3 text-sm text-exito">{{ mensaje }}</div>
+            {% else %}
+              <div class="border-l-4 border-acento bg-error-fondo px-4 py-3 text-sm text-acento">{{ mensaje }}</div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+  </main>
+
+  <footer class="p-6 text-center text-sm text-tinta-suave">
+    Agenda de contactos · persistencia en CSV · estilos con Tailwind CSS
+  </footer>
+</body>
+</html>
